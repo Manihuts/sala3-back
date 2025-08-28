@@ -11,6 +11,11 @@ const db = require("./models");
 const app = express();
 
 app.use(cors());
+// app.use(cors({
+//   origin: ["https://sala3.vercel.app"],
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   credentials: true
+// }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());

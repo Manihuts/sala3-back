@@ -1,12 +1,10 @@
-const User = require("../models/User");
-const bcrypt =require("bcrypt");
+const userService = require("../services/userService")
 
 module.exports = {
     async create(req, res) {
         try {
             const { name, login, password, role } = req.body;
-            const hashPassword = await bcrypt.hash(password, 10);
-            const user = await User.create ({ name, login, password: hashPassword, role });
+            const user = await userService.createUser({ name, login, password, role });
             res.status(201).json(user);
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -14,7 +12,11 @@ module.exports = {
     },
 
     async list(req, res) {
-        const users = await User.findAll({ attributes: { exclude: ["password"] } });
-        res.status(200).json(users);
+        try {
+            const users = await userService.listUsers();
+            res.status(200).json(users);
+        } catch (error) {
+            res.status(500).json({ error: err.message });
+        }
     }
 }
