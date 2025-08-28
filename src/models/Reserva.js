@@ -21,8 +21,12 @@ const Reserva = sequelize.define("Reserva", {
         allowNull: false 
     }
 }, {
-  tableName: "reservas",
-  timestamps: true
+    tableName: "reservas",
+    timestamps: true,
+    indexes: [
+        { unique: true, fields: ["date", "startTime"] },
+        { fields: ["date"] }
+    ]
 });
 
 // 1 -> N (1 usuário possui N reservas)

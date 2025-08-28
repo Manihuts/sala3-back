@@ -9,7 +9,7 @@ module.exports = (roles = []) => {
     if (scheme !== "Bearer" || !token) return res.status(401).json({ error: "[ERRO] :: Formato do token inválido." });
 
     try {
-      const decoded = jwt.verify(token.split(" ")[1], process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
       if (roles.length && !roles.includes(decoded.role)) {
         return res.status(403).json({ error: "[ERRO] :: Acesso negado." });
       }

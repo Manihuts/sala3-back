@@ -20,5 +20,15 @@ module.exports = {
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
+  },
+
+  async availability(req, res){
+  try{
+    const { date } = req.query;
+    if(!date) return res.status(400).json({ error: "Parâmetro 'date' é obrigatório (YYYY-MM-DD)." });
+    const slots = await ReservaService.getAvailability(date);
+    res.json(slots);
+  } catch(err) {
+    res.status(500).json({ error: err.message });
   }
-};
+}};

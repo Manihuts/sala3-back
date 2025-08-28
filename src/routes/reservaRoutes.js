@@ -14,4 +14,6 @@ router.post("/create", auth(["COLABORADOR", "ADMIN"]), async (req, res, next) =>
     next();
 }, reservaController.create);
 
+router.get("/availability", reservaController.availability);
+
 module.exports = router;
