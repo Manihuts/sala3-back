@@ -30,7 +30,7 @@ const Reserva = sequelize.define("Reserva", {
 });
 
 // 1 -> N (1 usuário possui N reservas)
-User.hasMany(Reserva, { foreignKey: "userId" });
-Reserva.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(Reserva, { foreignKey: "userId", as: "Reservas" });
+Reserva.belongsTo(User, { foreignKey: "userId", as: "User" });
 
-module.exports = Reserva;
+module.exports = Reserva; 
