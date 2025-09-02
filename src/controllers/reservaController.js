@@ -22,6 +22,19 @@ module.exports = {
     }
   },
 
+  async undo(req, res) {
+    try {
+      const reservaId = req.params.id;
+      const { id: requesterId, role: requesterRole } = req.user;
+
+      const out = await ReservaService.undoReserva({ reservaId, requesterId, requesterRole });
+
+      return res.status(200).json(out);
+    } catch (err) {
+      return res.status(err.status || 500).json({ error: err.message });
+    }
+  },
+
   async availability(req, res){
   try{
     const { date } = req.query;
