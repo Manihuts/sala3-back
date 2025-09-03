@@ -6,8 +6,8 @@ const User = require("../src/models/User");
 
 async function main() {
   const login = process.env.SEED_ADMIN_LOGIN || "admin";
-  const name = process.env.SEED_ADMIN_NAME || "Administrator";
-  const pass = process.env.SEED_ADMIN_PASS || "TroqueEstaSenha123!";
+  const name = process.env.SEED_ADMIN_NAME || "Cuidato Admin";
+  const pass = process.env.SEED_ADMIN_PASS || "@dmin2025cuidato";
 
   await db.sequelize.authenticate();
   await db.sequelize.sync();
