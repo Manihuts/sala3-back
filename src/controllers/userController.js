@@ -18,5 +18,21 @@ module.exports = {
         } catch (error) {
             res.status(500).json({ error: err.message });
         }
-    }
+    },
+
+    async updateSelf(req, res) {
+        try {
+            const { id: requesterId } = req.user;
+            const { login, currentPassword, newPassword } = req.body || {};
+            const out = await userService.updateUser({
+                requesterId,
+                login,
+                currentPassword,
+                newPassword
+            });
+            return res.status(200).json(out);
+        } catch (err) {
+            return res.status(err.status || 500).json({ error: err.message });
+        }
+    },
 }
