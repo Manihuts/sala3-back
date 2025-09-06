@@ -24,14 +24,14 @@ class UserService {
             throw e;
         }
 
-        const user = User.findByPk(id, { attributes: ['id', 'name', 'login', 'role', 'password'] });
+        const user = await User.findByPk(id, { attributes: ['id', 'name', 'login', 'role', 'password'] });
         if (!user) {
             const e = new Error('[ERROR] :: Usuário não encontrado.');
             e.status = 404;
             throw e;
         }
 
-        userUpdates = {};
+        const userUpdates = {};
 
         if (typeof login !== 'undefined') {
             const newLogin = String(login).trim();
@@ -72,6 +72,7 @@ class UserService {
             userUpdates.password = await bcrypt.hash(p, 12);
         }
 
+        // caso nada seja atualizado
         if (Object.keys(userUpdates).length === 0) {
             return { id: user.id, name: user.name, login: user.login, role: user.role };
         }

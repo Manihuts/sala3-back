@@ -25,7 +25,7 @@ module.exports = {
             const { id: requesterId } = req.user;
             const { login, currentPassword, newPassword } = req.body || {};
             const out = await UserService.updateUser({
-                requesterId,
+                requesterId: req.user.id,
                 login,
                 currentPassword,
                 newPassword
