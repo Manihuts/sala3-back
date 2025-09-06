@@ -33,12 +33,12 @@ function startsForDate(dateStr) {
   const weekday = weekdayUTC(dateStr);
   if (weekday === 0) return []; // domingo
   if (weekday === 6) { // sábado
-    return halfHourStarts("08:00", "12:00");
+    return halfHourStarts("08:00", "11:30");
   }
   // seg - sexta
   return [
-    ...halfHourStarts("08:00", "13:00"),
-    ...halfHourStarts("14:00", "20:00"),
+    ...halfHourStarts("08:00", "12:30"),
+    ...halfHourStarts("14:00", "19:30"),
   ];
 }
 

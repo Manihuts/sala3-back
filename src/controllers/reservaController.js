@@ -6,7 +6,7 @@ module.exports = {
     try {
       const { date, startTime, userId: bodyUserId } = req.body;
 
-      const targetUserId = req.user.id;
+      let targetUserId = req.user.id;
       if (req.user.role === "ADMIN" && bodyUserId) {
         const parsed = Number(bodyUserId);
         if (!Number.isInteger(parsed) || parsed <= 0) {
@@ -30,6 +30,7 @@ module.exports = {
         startTime,
         userId: targetUserId,
       });
+      
       res.status(201).json(reserva);
     } catch (err) {
       res.status(err.status || 400).json({ error: err.message });
