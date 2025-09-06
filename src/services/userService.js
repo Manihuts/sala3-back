@@ -24,12 +24,14 @@ class UserService {
             throw e;
         }
 
-        const user = User.findByPk(id);
+        const user = User.findByPk(id, { attributes: ['id', 'name', 'login', 'role', 'password'] });
         if (!user) {
             const e = new Error('[ERROR] :: Usuário não encontrado.');
             e.status = 404;
             throw e;
         }
+
+        userUpdates = {};
 
         if (typeof login !== 'undefined') {
             const newLogin = String(login).trim();
@@ -39,17 +41,16 @@ class UserService {
                 throw e;
             }
         
-            const exists = await User.findOne({
-                where: { login: newLogin, id: { [Op.ne]: id } },
-                attributes: ['id']
+            const duplicate = await User.count({
+                where: { login: newLogin, id: { [Op.ne]: id } }
             });
-            if (exists) {
+            if (duplicate) {
                 const e = new Error('[ERROR] :: Já existe um usuário com esse login.');
                 e.status = 409;
                 throw e;
             }
 
-            user.login = newLogin;
+            userUpdates.login = newLogin;
         }
 
         if (typeof newPassword !== 'undefined') {
@@ -68,12 +69,17 @@ class UserService {
                 throw e;
             }
 
-            user.password = await bcrypt.hash(p, 12);
+            userUpdates.password = await bcrypt.hash(p, 12);
         }
 
-        await user.save();
+        if (Object.keys(userUpdates).length === 0) {
+            return { id: user.id, name: user.name, login: user.login, role: user.role };
+        }
 
-        return { id: user.id, name: user.name, login: user.login, role: user.role };
+        await User.update(userUpdates, { where: { id } });
+
+        const freshUser = await User.findByPk(id, { attributes: ['id', 'name', 'login', 'role'] });
+        return freshUser;
     }
 }
 

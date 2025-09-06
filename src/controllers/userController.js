@@ -1,10 +1,10 @@
-const userService = require("../services/userService")
+const UserService = require("../services/userService")
 
 module.exports = {
     async create(req, res) {
         try {
             const { name, login, password, role } = req.body;
-            const user = await userService.createUser({ name, login, password, role });
+            const user = await UserService.createUser({ name, login, password, role });
             res.status(201).json(user);
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -13,7 +13,7 @@ module.exports = {
 
     async list(req, res) {
         try {
-            const users = await userService.listUsers();
+            const users = await UserService.listUsers();
             res.status(200).json(users);
         } catch (error) {
             res.status(500).json({ error: err.message });
@@ -24,7 +24,7 @@ module.exports = {
         try {
             const { id: requesterId } = req.user;
             const { login, currentPassword, newPassword } = req.body || {};
-            const out = await userService.updateUser({
+            const out = await UserService.updateUser({
                 requesterId,
                 login,
                 currentPassword,
