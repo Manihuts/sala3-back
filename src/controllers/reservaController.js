@@ -79,7 +79,19 @@ module.exports = {
 
   async summary(req, res) {
     try {
-        const { from, to } = req.query;
+        const rawFrom = req.query.from;
+        const rawTo = req.query.to;
+
+        const from = String(rawFrom || '').slice(0, 10);
+        const to   = String(rawTo   || '').slice(0, 10);
+
+        const ymd = /^\d{4}-\d{2}-\d{2}$/;
+        if (!ymd.test(from) || !ymd.test(to)) {
+          const e = new Error("[ERROR] :: Parâmetros 'from' e 'to' devem ser YYYY-MM-DD.");
+          e.status = 400;
+          throw e;
+        }
+
         const data = await ReservaService.getReservasByPeriod({ from, to })
         res.json(data);
     } catch (err) {
