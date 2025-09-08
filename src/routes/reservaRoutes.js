@@ -17,6 +17,8 @@ router.post("/create", auth(["COLABORADOR", "ADMIN"]), async (req, res, next) =>
 // Desfaz reserva (admin -> qualquer uma, colaborador -> apenas suas) - precisa estar logado
 router.delete("/:id", auth(["COLABORADOR", "ADMIN"]), reservaController.undo);
 
-router.get("/availability", reservaController.availability);
+router.get("/availability", auth(["COLABORADOR", "ADMIN"]), reservaController.availability);
+
+router.get("/summary", auth(["COLABORADOR", "ADMIN"]), reservaController.summary);
 
 module.exports = router;

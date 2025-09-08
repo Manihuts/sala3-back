@@ -1,5 +1,7 @@
 const Reserva = require("../models/Reserva");
+const { Op } = require("sequelize");
 
+// helpers
 const HALF = 30;
 
 function toMin(hhmm) {
@@ -122,7 +124,7 @@ class ReservaService {
         return { ok: true, id: idNum };
     }
 
-    static async getAvailability(date){
+    static async getAvailability(date) {
         const starts = startsForDate(date);
         if (starts.length === 0) return [];
         
@@ -144,6 +146,30 @@ class ReservaService {
             }
         }
         return slots;
+    }
+
+    static async getReservasByPeriod(from, to) {
+        if (!from || !to) {
+            const e = new Error("[ERROR] :: Parâmetros 'from' e 'to' são obrigatórios (YYYY-MM-DD).")
+            e.status = 400;
+            throw e;
+        }
+
+        const rows = await Reserva.findAll({
+            attributes: ["date"],
+            where: { date: { [Op.between]: [from, to] } },
+            raw: true
+        });
+
+        const map = new Map();
+        for (const r of rows) {
+            const d = String(r.date);
+            map.set(d, (map.get(d) || 0) + 1);
+        }
+
+        return Array.from(map.entries())
+            .map(([date, count]) => ({ date, count }))
+            .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
     }
 }
 

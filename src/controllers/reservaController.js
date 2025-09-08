@@ -76,4 +76,14 @@ module.exports = {
       res.status(err.status || 500).json({ error: err.message });
     }
   },
+
+  async summary(req, res) {
+    try {
+        const { from, to } = req.query;
+        const data = await ReservaService.getReservasByPeriod({ from, to })
+        res.json(data);
+    } catch (err) {
+      res.status(err.status || 500).json({ error: err.message });
+    }
+  }
 };
