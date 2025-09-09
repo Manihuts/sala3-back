@@ -92,7 +92,7 @@ module.exports = {
           throw e;
         }
 
-        const data = await ReservaService.getReservasByPeriod({ from, to })
+        const data = await ReservaService.getReservasByPeriod(from, to)
         res.json(data);
     } catch (err) {
       res.status(err.status || 500).json({ error: err.message });
