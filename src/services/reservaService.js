@@ -44,7 +44,7 @@ function startsForDate(dateStr) {
   ];
 }
 
-function isPast(dateStr, startHM) {
+function isPastSlot(dateStr, startHM) {
     const slot = new Date(`${dateStr}T${startHM}:00`);
     const now = new Date();
     return slot.getTime() <= now.getTime();
@@ -66,7 +66,7 @@ class ReservaService {
             throw e;
         }
 
-        if (isPast(date, start)) {
+        if (isPastSlot(date, start)) {
             const e = new Error(`[ERROR] :: Não é possível reservar horários no passado.`);
             e.status = 400;
             throw e;
