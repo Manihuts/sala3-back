@@ -44,6 +44,11 @@ function startsForDate(dateStr) {
   ];
 }
 
+function isPast(dateStr, startHM) {
+    const slot = new Date(`${dateStr}T${startHM}:00`);
+    const now = new Date();
+    return slot.getTime() <= now.getTime();
+}
 class ReservaService {
     static async createReserva({ date, startTime, userId }) {
         const start = String(startTime).slice(0, 5);
@@ -57,6 +62,12 @@ class ReservaService {
 
         if (!allowed.includes(start)) {
             const e = new Error(`[ERROR] :: Horário ${start} não é permitido para a data ${date}.`);
+            e.status = 400;
+            throw e;
+        }
+
+        if (isPast(date, start)) {
+            const e = new Error(`[ERROR] :: Não é possível reservar horários no passado.`);
             e.status = 400;
             throw e;
         }
@@ -142,7 +153,8 @@ class ReservaService {
             if(r) {
                 slots.push({ start, end, status:'booked', by: r.User?.name || '—' });
             } else {
-                slots.push({ start, end, status:'free' });
+                const past = isPastSlot(date, start);
+                slots.push({ start, end, status: past ? 'past' : 'free' });
             }
         }
         return slots;
